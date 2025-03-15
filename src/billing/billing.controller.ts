@@ -1,31 +1,42 @@
-import { Controller, Delete, Get, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { BillingService } from "./billing.service";
+import { Billing } from "./billing.entity";
 
-@Controller()
+@Controller('billing')
 export class BillingController {
-  constructor(private billingService: BillingService) {}
+  constructor(private readonly billingService: BillingService) {}
 
-  // GET /billing
-  @Get('billing')
-  getBilling() {
-    return this.billingService.getBilling();
+  // [GET] /billing
+  @Get()
+  async getBillings(): Promise<Billing[]> {
+    return this.billingService.findAll();
   }
 
-  // POST /billing
-  @Post('billing')
-  addBilling() {
-    return this.billingService.addBilling();
+  // [POST] /billing
+  @Post()
+  async createBilling(
+    @Body() billing: Billing
+  ): Promise<Billing> {
+    return this.billingService.create(billing);
   }
 
-  // PUT /billing
-  @Put('billing')
-  updateBilling() {
-    return this.billingService.updateBilling();
+  // [PUT] /billing/:userId/:productCode
+  @Put(':userId/:productCode')
+  async updateBilling(
+    @Param('userId') userId: number,
+    @Param('productCode') productCode: number,
+    @Body() billing: Billing
+  ): Promise<Billing> {
+    return this.billingService.update(userId, productCode, billing);
   }
 
-  // DELETE /billing
-  @Delete('billing')
-  deleteBilling() {
-    return this.billingService.deleteBilling();
+  // [DELETE] /billing/:userId/:productCode
+  @Delete(':userId/:productCode')
+  async deleteBilling(
+    @Param('userId') userId: number,
+    @Param('productCode') productCode: number
+  ) {
+    const billingRecord = await this.billingService.findOne(userId, productCode);
+    return this.billingService.delete(billingRecord.id);
   }
 }
