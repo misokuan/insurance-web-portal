@@ -1,0 +1,29 @@
+services:
+  assessment:
+    container_name: assessment
+    image: puikuan/assessment:1.0.0
+    build: .
+    ports:
+      - 3333:3333
+    environment:
+      DB_TYPE: postgres
+      POSTGRES_HOST: db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: CUSTOMER_BILLING_PORTAL
+      POSTGRES_PORT: 5432
+    depends_on:
+      - db
+  db:
+    container_name: db
+    image: postgres:13
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: CUSTOMER_BILLING_PORTAL
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata: {}
