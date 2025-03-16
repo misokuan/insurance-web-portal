@@ -12,7 +12,7 @@ export class BillingService {
   ) { }
 
   // retrieve all billing details
-  async findAll(queryDto: OptionalBillingQueryDto): Promise<number> {
+  async findAll(queryDto: OptionalBillingQueryDto): Promise<string> {
     let optionalSearch = Object.assign({},
       queryDto.productCode && { productCode: queryDto.productCode },
       queryDto.location && { location: queryDto.location }
@@ -30,7 +30,7 @@ export class BillingService {
       sumOfPremiumPaid += parseFloat(result.premiumPaid);
     })
 
-    return sumOfPremiumPaid;
+    return `MYR ${sumOfPremiumPaid}`;
   }
 
   // retrieve specific billing detail

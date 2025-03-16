@@ -4,6 +4,7 @@ import { Billing } from "./billing.entity";
 import { BillingDto, OptionalBillingQueryDto, SingleBillingQueryDto } from "./dto";
 import { Roles } from "src/role/role.decorator";
 import { Role } from "src/role/role.enum";
+import { ApiSecurity } from "@nestjs/swagger";
 
 @Controller('billing')
 export class BillingController {
@@ -11,15 +12,17 @@ export class BillingController {
 
   // [GET] /billing?productCode=&location=
   @Get()
+  @ApiSecurity('Role')
   @Roles(Role.Admin, Role.User)
   async getBillings(
     @Query() queryDto: OptionalBillingQueryDto
-  ): Promise<number> {
+  ): Promise<string> {
     return this.billingService.findAll(queryDto);
   }
 
   // [POST] /billing
   @Post()
+  @ApiSecurity('Role')
   @Roles(Role.Admin)
   async createBilling(
     @Body() bodyDto: BillingDto
@@ -29,6 +32,7 @@ export class BillingController {
 
   // [PUT] /billing?userId=&productCode=
   @Put()
+  @ApiSecurity('Role')
   @Roles(Role.Admin)
   async updateBilling(
     @Query() queryDto: SingleBillingQueryDto,
@@ -39,6 +43,7 @@ export class BillingController {
 
   // [DELETE] /billing?userId=&productCode=
   @Delete()
+  @ApiSecurity('Role')
   @Roles(Role.Admin)
   async deleteBilling(
     @Query() queryDto: SingleBillingQueryDto

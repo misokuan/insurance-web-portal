@@ -31,9 +31,9 @@ export class SingleBillingQueryDto {
 export class OptionalBillingQueryDto {
   @IsNumber()
   @IsOptional()
-  productCode: number;
+  productCode?: number;
 
   @IsString()
   @IsOptional()
-  location: string;
+  location?: string;
 }
