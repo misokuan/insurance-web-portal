@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { BillingService } from "./billing.service";
 import { Billing } from "./billing.entity";
+import { BillingDto, OptionalBillingQueryDto, SingleBillingQueryDto } from "./dto";
 
 @Controller('billing')
 export class BillingController {
@@ -9,37 +10,34 @@ export class BillingController {
   // [GET] /billing?productCode=&location=
   @Get()
   async getBillings(
-    @Query('productCode') productCode?: number,
-    @Query('location') location?: string
+    @Query() queryDto: OptionalBillingQueryDto
   ): Promise<Billing[]> {
-    return this.billingService.findAll(productCode, location);
+    return this.billingService.findAll(queryDto);
   }
 
   // [POST] /billing
   @Post()
   async createBilling(
-    @Body() billing: Billing
+    @Body() bodyDto: BillingDto
   ): Promise<Billing> {
-    return this.billingService.create(billing);
+    return this.billingService.create(bodyDto);
   }
 
   // [PUT] /billing?userId=&productCode=
   @Put()
   async updateBilling(
-    @Query('userId') userId: number,
-    @Query('productCode') productCode: number,
-    @Body() billing: Billing
+    @Query() queryDto: SingleBillingQueryDto,
+    @Body() bodyDto: BillingDto
   ): Promise<Billing> {
-    return this.billingService.update(userId, productCode, billing);
+    return this.billingService.update(queryDto, bodyDto);
   }
 
   // [DELETE] /billing?userId=&productCode=
   @Delete()
   async deleteBilling(
-    @Query('userId') userId: number,
-    @Query('productCode') productCode: number
+    @Query() queryDto: SingleBillingQueryDto
   ) {
-    const billingRecord = await this.billingService.findOne(userId, productCode);
+    const billingRecord = await this.billingService.findOne(queryDto);
     return this.billingService.delete(billingRecord.id);
   }
 }
