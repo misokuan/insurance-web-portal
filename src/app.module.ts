@@ -3,20 +3,12 @@ import { BillingModule } from './billing/billing.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { typeOrmConfigAsync } from './config/typeorm.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: 5432,
-      username: 'user',
-      password: 'password',
-      database: 'CUSTOMER_BILLING_PORTAL',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
-    }),
+    TypeOrmModule.forRootAsync(typeOrmConfigAsync),
     BillingModule,
     UserModule
   ],
