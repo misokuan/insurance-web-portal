@@ -25,8 +25,8 @@
     "seed:run": "npx ts-node -r tsconfig-paths/register ./node_modules/@jorgebodega/typeorm-seeding/dist/cli.js seed -d ./src/config/typeorm.config.ts ./src/database/seeders/*.seeder.ts",
     "db:dev:rm": "docker compose rm dev-db -s -f -v",
     "db:dev:up": "docker compose up dev-db -d",
-    "db:dev:deploy": "npm run migration:run",
-    "db:dev:restart": "npm run db:dev:rm && npm run db:dev:up && timeout /t 1 && npm run db:dev:deploy"
+    "db:dev:deploy": "npm run migration:run && timeout /t 1 && npm run seed:run",
+    "db:dev:start": "npm run db:dev:rm && npm run db:dev:up && timeout /t 1 && npm run db:dev:deploy"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
