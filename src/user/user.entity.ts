@@ -19,5 +19,5 @@ export class User {
     photo: string;
 
     @OneToMany(() => Billing, (billing) => billing.userId)
-    billings: Billing[];
+    billings?: Billing[];
 }

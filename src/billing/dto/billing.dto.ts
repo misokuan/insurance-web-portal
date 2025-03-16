@@ -11,7 +11,7 @@ export class BillingDto {
 
   @IsDecimal()
   @IsNotEmpty()
-  premiumPaid: number;
+  premiumPaid: string;
 
   @IsNumber()
   @IsNotEmpty()

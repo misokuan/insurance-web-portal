@@ -7,18 +7,18 @@ services:
       - 3333:3333
     environment:
       DB_TYPE: postgres
-      POSTGRES_HOST: db
+      POSTGRES_HOST: localhost
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: CUSTOMER_BILLING_PORTAL
-      POSTGRES_PORT: 5432
+      POSTGRES_PORT: 5434
     depends_on:
-      - db
-  db:
-    container_name: db
+      - dev-db
+  dev-db:
+    container_name: dev-db
     image: postgres:13
     ports:
-      - 5432:5432
+      - 5434:5432
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password

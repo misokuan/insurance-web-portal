@@ -1,29 +1,21 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModuleAsyncOptions, TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
-import { LoggerOptions } from 'typeorm';
+import { DataSource } from 'typeorm';
+import { config } from 'dotenv';
+import { ConfigService } from '@nestjs/config';
+config();
+const configService = new ConfigService();
 
-@Injectable()
-export class TypeOrmConfig implements TypeOrmOptionsFactory {
-  constructor(private configService: ConfigService) { }
+const AppDataSource = new DataSource({
+  type: 'postgres',
+  host: 'localhost',
+  port: parseInt(process.env.POSTGRES_PORT || "5434"),
+  username: "user",
+  password: "password",
+  database: 'CUSTOMER_BILLING_PORTAL',
+  synchronize: false,
+  entities: ['**/*.entity.ts'],
+  migrations: ['src/database/migrations/*-migration.ts'],
+  migrationsRun: false,
+  logging: true
+});
 
-  createTypeOrmOptions(): TypeOrmModuleOptions {
-    return {
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'user',
-      password: 'password',
-      database: 'CUSTOMER_BILLING_PORTAL',
-      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-      synchronize: false,
-      logging: true
-    };
-  }
-}
-
-export const typeOrmConfigAsync: TypeOrmModuleAsyncOptions = {
-  imports: [ConfigModule],
-  useClass: TypeOrmConfig,
-  inject: [ConfigService]
-};
+export default AppDataSource;

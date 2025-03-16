@@ -12,13 +12,13 @@ export class Billing {
     @Column()
     location: string;
 
-    @Column()
-    premiumPaid: number;
+    @Column({ type: 'real' })
+    premiumPaid: string;
 
     @Column({ name: 'userId' })
     userId: number;
 
     @ManyToOne(() => User, (user) => user.billings)
     @JoinColumn({ name: 'userId' })
-    user: User;
+    user?: User;
 }
