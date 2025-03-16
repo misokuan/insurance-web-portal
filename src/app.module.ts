@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { BillingModule } from './billing/billing.module';
-import { UsersModule } from './users/users.module';
+import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -18,7 +18,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       synchronize: true,
     }),
     BillingModule,
-    UsersModule
+    UserModule
   ],
 })
 export class AppModule {}

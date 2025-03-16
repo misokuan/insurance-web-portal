@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/user/user.entity";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 
-@Entity()
+@Entity({ name: 'BILLING_RECORDS' })
 export class Billing {
     @PrimaryGeneratedColumn()
     id: number;
@@ -14,7 +15,10 @@ export class Billing {
     @Column()
     premiumPaid: number;
 
-    // TODO: create user table
-    @Column()
+    @Column({ name: 'userId' })
     userId: number;
+
+    @ManyToOne(() => User, (user) => user.billings)
+    @JoinColumn({ name: 'userId' })
+    user: User;
 }
