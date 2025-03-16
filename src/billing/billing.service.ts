@@ -11,26 +11,30 @@ export class BillingService {
   ) { }
 
   // retrieve all billing details
-  async findAll(): Promise<Billing[]> {
-    return await this.billingRepository.find();
+  async findAll(productCode?: number, location?: string): Promise<Billing[]> {
+    let optionalSearch = Object.assign({},
+      productCode && { productCode },
+      location && { location }
+    );
+    return await this.billingRepository.findBy(optionalSearch);
   }
 
   // retrieve specific billing detail
   async findOne(userId: number, productCode: number): Promise<Billing> {
-    return await this.billingRepository.findOneOrFail({ where: { userId, productCode } });
+    return await this.billingRepository.findOneByOrFail({ userId, productCode });
   }
 
   // create new billing detail entry
   async create(billing: Billing): Promise<Billing> {
     const newBilling = this.billingRepository.create(billing);
     const newBillingId = (await this.billingRepository.insert(newBilling)).generatedMaps[0].id;
-    return await this.billingRepository.findOneOrFail({ where: { id: newBillingId } });
+    return await this.billingRepository.findOneByOrFail({ id: newBillingId });
   }
 
   // update specific billing detail
   async update(userId: number, productCode: number, billing: Billing): Promise<Billing> {
     await this.billingRepository.update({ userId, productCode }, billing);
-    return this.findOne(userId, productCode);
+    return await this.billingRepository.findOneByOrFail(billing);
   }
 
   // DELETE specific billing detail
