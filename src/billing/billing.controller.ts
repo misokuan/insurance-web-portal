@@ -2,6 +2,8 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/
 import { BillingService } from "./billing.service";
 import { Billing } from "./billing.entity";
 import { BillingDto, OptionalBillingQueryDto, SingleBillingQueryDto } from "./dto";
+import { Roles } from "src/role/role.decorator";
+import { Role } from "src/role/role.enum";
 
 @Controller('billing')
 export class BillingController {
@@ -9,6 +11,7 @@ export class BillingController {
 
   // [GET] /billing?productCode=&location=
   @Get()
+  @Roles(Role.Admin, Role.User)
   async getBillings(
     @Query() queryDto: OptionalBillingQueryDto
   ): Promise<number> {
@@ -17,6 +20,7 @@ export class BillingController {
 
   // [POST] /billing
   @Post()
+  @Roles(Role.Admin)
   async createBilling(
     @Body() bodyDto: BillingDto
   ): Promise<Billing> {
@@ -25,6 +29,7 @@ export class BillingController {
 
   // [PUT] /billing?userId=&productCode=
   @Put()
+  @Roles(Role.Admin)
   async updateBilling(
     @Query() queryDto: SingleBillingQueryDto,
     @Body() bodyDto: BillingDto
@@ -34,6 +39,7 @@ export class BillingController {
 
   // [DELETE] /billing?userId=&productCode=
   @Delete()
+  @Roles(Role.Admin)
   async deleteBilling(
     @Query() queryDto: SingleBillingQueryDto
   ) {
