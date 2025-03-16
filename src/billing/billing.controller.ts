@@ -11,7 +11,7 @@ export class BillingController {
   @Get()
   async getBillings(
     @Query() queryDto: OptionalBillingQueryDto
-  ): Promise<Billing[]> {
+  ): Promise<number> {
     return this.billingService.findAll(queryDto);
   }
 

@@ -12,12 +12,25 @@ export class BillingService {
   ) { }
 
   // retrieve all billing details
-  async findAll(queryDto: OptionalBillingQueryDto): Promise<Billing[]> {
+  async findAll(queryDto: OptionalBillingQueryDto): Promise<number> {
     let optionalSearch = Object.assign({},
       queryDto.productCode && { productCode: queryDto.productCode },
       queryDto.location && { location: queryDto.location }
     );
-    return await this.billingRepository.findBy(optionalSearch);
+    const results = await this.billingRepository.find({
+      where: optionalSearch,
+      select: {
+        premiumPaid: true,
+      }
+    });
+
+    let sumOfPremiumPaid = 0;
+
+    results.forEach((result) => {
+      sumOfPremiumPaid += parseFloat(result.premiumPaid);
+    })
+
+    return sumOfPremiumPaid;
   }
 
   // retrieve specific billing detail
