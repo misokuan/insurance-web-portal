@@ -8,12 +8,15 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Billing API')
     .setVersion('1.0')
-    .addApiKey({
-      type: 'apiKey',
-      in: 'header',
-      name: 'Role',
-      description: 'Key in your role - User / Admin',
-    }, 'Role')
+    .addApiKey(
+      {
+        type: 'apiKey',
+        in: 'header',
+        name: 'Role',
+        description: 'Key in your role - User / Admin',
+      },
+      'Role',
+    )
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);

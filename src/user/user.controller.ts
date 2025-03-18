@@ -1,11 +1,11 @@
-import { Controller, Get } from "@nestjs/common";
-import { UserService } from "./user.service";
-import { User } from "./user.entity";
-import { Paginate, Paginated, PaginateQuery } from "nestjs-paginate";
+import { Controller, Get } from '@nestjs/common';
+import { UserService } from './user.service';
+import { User } from './user.entity';
+import { Paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   // [GET] /users
   @Get()
@@ -15,9 +15,7 @@ export class UserController {
 
   // [GET] /users/:id
   @Get(':id')
-  async getUser(
-    id: number
-  ): Promise<User> {
+  async getUser(id: number): Promise<User> {
     return await this.userService.findOne(id);
   }
 }

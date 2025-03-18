@@ -1,4 +1,10 @@
-import { IsDecimal, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import {
+  IsDecimal,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class BillingDto {
   @IsNumber()

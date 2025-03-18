@@ -1,10 +1,14 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { Billing } from "./billing.entity";
-import { BillingDto, OptionalBillingQueryDto, SingleBillingQueryDto, TotalPremiumPaidDto } from "./dto";
-import { UserService } from "src/user/user.service";
-import { UserController } from "src/user/user.controller";
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Billing } from './billing.entity';
+import {
+  BillingDto,
+  OptionalBillingQueryDto,
+  SingleBillingQueryDto,
+  TotalPremiumPaidDto,
+} from './dto';
+import { UserService } from 'src/user/user.service';
 
 @Injectable({})
 export class BillingService {
@@ -12,30 +16,33 @@ export class BillingService {
     @InjectRepository(Billing)
     private billingRepository: Repository<Billing>,
     private userService: UserService,
-  ) { }
+  ) {}
 
   // retrieve all billing details
-  async findAll(queryDto: OptionalBillingQueryDto): Promise<TotalPremiumPaidDto> {
-    let optionalSearch = Object.assign({},
+  async findAll(
+    queryDto: OptionalBillingQueryDto,
+  ): Promise<TotalPremiumPaidDto> {
+    const optionalSearch = Object.assign(
+      {},
       queryDto.productCode && { productCode: queryDto.productCode },
-      queryDto.location && { location: queryDto.location }
+      queryDto.location && { location: queryDto.location },
     );
-    
+
     const results = await this.billingRepository.find({
       where: optionalSearch,
       select: {
         premiumPaid: true,
-      }
+      },
     });
 
     let sumOfPremiumPaid = 0;
 
     results.forEach((result) => {
       sumOfPremiumPaid += result.premiumPaid;
-    })
+    });
 
     return {
-      totalPremiumPaid: sumOfPremiumPaid
+      totalPremiumPaid: sumOfPremiumPaid,
     };
   }
 
@@ -49,7 +56,9 @@ export class BillingService {
     const newBilling = this.billingRepository.create(bodyDto);
     const userExists = await this.userService.findOne(bodyDto.userId);
     if (userExists) {
-      const newBillingId = (await this.billingRepository.insert(newBilling)).generatedMaps[0].id;
+      const newBillingId: number = (
+        await this.billingRepository.insert(newBilling)
+      ).generatedMaps[0].id;
       return await this.billingRepository.findOneByOrFail({ id: newBillingId });
     } else {
       throw new BadRequestException('User ID does not exist');
@@ -57,7 +66,10 @@ export class BillingService {
   }
 
   // update specific billing detail
-  async update(queryDto: SingleBillingQueryDto, bodyDto: BillingDto): Promise<Billing> {
+  async update(
+    queryDto: SingleBillingQueryDto,
+    bodyDto: BillingDto,
+  ): Promise<Billing> {
     await this.billingRepository.update(queryDto, bodyDto);
     const userExists = await this.userService.findOne(bodyDto.userId);
     if (userExists) {
