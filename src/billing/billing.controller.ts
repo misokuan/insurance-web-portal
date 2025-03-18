@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Query } from "@nestjs/common";
 import { BillingService } from "./billing.service";
 import { Billing } from "./billing.entity";
-import { BillingDto, OptionalBillingQueryDto, SingleBillingQueryDto } from "./dto";
+import { BillingDto, OptionalBillingQueryDto, SingleBillingQueryDto, TotalPremiumPaidDto } from "./dto";
 import { Roles } from "src/role/role.decorator";
 import { Role } from "src/role/role.enum";
 import { ApiSecurity } from "@nestjs/swagger";
@@ -16,7 +16,7 @@ export class BillingController {
   @Roles(Role.Admin, Role.User)
   async getBillings(
     @Query() queryDto: OptionalBillingQueryDto
-  ): Promise<string> {
+  ): Promise<TotalPremiumPaidDto> {
     return this.billingService.findAll(queryDto);
   }
 
@@ -27,7 +27,11 @@ export class BillingController {
   async createBilling(
     @Body() bodyDto: BillingDto
   ): Promise<Billing> {
-    return this.billingService.create(bodyDto);
+    return await this.billingService.create(bodyDto).catch(err => {
+      throw new HttpException({
+        message: err.message
+      }, HttpStatus.BAD_REQUEST)
+    });
   }
 
   // [PUT] /billing?userId=&productCode=
@@ -38,7 +42,11 @@ export class BillingController {
     @Query() queryDto: SingleBillingQueryDto,
     @Body() bodyDto: BillingDto
   ): Promise<Billing> {
-    return this.billingService.update(queryDto, bodyDto);
+    return await this.billingService.update(queryDto, bodyDto).catch(err => {
+      throw new HttpException({
+        message: err.message
+      }, HttpStatus.BAD_REQUEST)
+    });
   }
 
   // [DELETE] /billing?userId=&productCode=
@@ -48,7 +56,11 @@ export class BillingController {
   async deleteBilling(
     @Query() queryDto: SingleBillingQueryDto
   ) {
-    const billingRecord = await this.billingService.findOne(queryDto);
+    const billingRecord = await this.billingService.findOne(queryDto).catch(err => {
+      throw new HttpException({
+        message: err.message
+      }, HttpStatus.BAD_REQUEST)
+    });
     return this.billingService.delete(billingRecord.id);
   }
 }

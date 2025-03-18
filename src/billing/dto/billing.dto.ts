@@ -11,7 +11,7 @@ export class BillingDto {
 
   @IsDecimal()
   @IsNotEmpty()
-  premiumPaid: string;
+  premiumPaid: number;
 
   @IsNumber()
   @IsNotEmpty()
@@ -36,4 +36,9 @@ export class OptionalBillingQueryDto {
   @IsString()
   @IsOptional()
   location?: string;
+}
+
+export class TotalPremiumPaidDto {
+  @IsNumber()
+  totalPremiumPaid: number;
 }

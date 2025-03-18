@@ -12,8 +12,8 @@ export class Billing {
     @Column()
     location: string;
 
-    @Column({ type: 'real' })
-    premiumPaid: string;
+    @Column('decimal', { scale: 2 })
+    premiumPaid: number;
 
     @Column({ name: 'userId' })
     userId: number;
