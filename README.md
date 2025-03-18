@@ -60,6 +60,14 @@ $ npm run start
 $ npm run start:dev
 ```
 
+## Swagger
+
+Go to http://localhost:3333/api to test the APIs.
+
+1. To start, ensure the role is set in the Authorize section (User / Admin).
+
+2. Select 'Try it out' to test out the APIs. If there are errors, reason will be provided in the response message.
+
 ## Run tests
 
 ```bash
