@@ -1,6 +1,7 @@
 import { Controller, Get } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { User } from "./user.entity";
+import { Paginate, Paginated, PaginateQuery } from "nestjs-paginate";
 
 @Controller('users')
 export class UserController {
@@ -8,8 +9,8 @@ export class UserController {
 
   // [GET] /users
   @Get()
-  async getUsers(): Promise<User[]> {
-    return this.userService.findAll();
+  async getUsers(@Paginate() query: PaginateQuery): Promise<Paginated<User>> {
+    return this.userService.findAll(query);
   }
 
   // [GET] /users/:id

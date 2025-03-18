@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "./user.entity";
+import { FilterOperator, paginate, Paginated, PaginateQuery } from "nestjs-paginate";
 
 @Injectable({})
 export class UserService {
@@ -11,8 +12,15 @@ export class UserService {
   ) { }
 
   // GET all users
-  async findAll(): Promise<User[]> {
-    return await this.userRepository.find();
+  async findAll(query: PaginateQuery): Promise<Paginated<User>> {
+    return paginate(query, this.userRepository, {
+      sortableColumns: ['firstName'],
+      filterableColumns: {
+        firstName: [FilterOperator.ILIKE],
+        lastName: [FilterOperator.ILIKE]
+      },
+      defaultLimit: 6,
+    })
   }
 
   // GET specific user
