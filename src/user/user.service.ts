@@ -16,8 +16,8 @@ export class UserService {
     return paginate(query, this.userRepository, {
       sortableColumns: ['firstName'],
       filterableColumns: {
-        firstName: [FilterOperator.ILIKE],
-        lastName: [FilterOperator.ILIKE]
+        firstName: [FilterOperator.SW],
+        lastName: [FilterOperator.SW]
       },
       defaultLimit: 6,
     })
